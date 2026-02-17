@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.6", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install pipenv
+        run: |
+          if [ "${{ matrix.python-version }}" = "3.6" ]; then
+            python -m pip install "pipenv==2022.4.8"
+          else
+            python -m pip install pipenv
+          fi
+
+      - name: Install dependencies
+        run: |
+          if [ "${{ matrix.python-version }}" = "3.6" ]; then
+            pipenv install --dev --skip-lock
+          else
+            pipenv install --dev
+          fi
+
+      - name: Run test suite
+        run: pipenv run mamba --enable-coverage
+
+      - name: Coverage report
+        run: pipenv run coverage report
