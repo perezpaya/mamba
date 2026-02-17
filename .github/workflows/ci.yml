@@ -11,8 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
-            python-version: "3.6"
+          - os: ubuntu-20.04
+            python-version: "3.6.15"
           - os: ubuntu-latest
             python-version: "3.8"
           - os: ubuntu-latest
@@ -38,7 +38,7 @@ jobs:
 
       - name: Install pipenv
         run: |
-          if [ "${{ matrix.python-version }}" = "3.6" ]; then
+          if [ "${{ matrix.python-version }}" = "3.6.15" ]; then
             python -m pip install "pipenv==2022.4.8"
           else
             python -m pip install pipenv
